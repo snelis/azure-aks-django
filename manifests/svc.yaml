@@ -4,7 +4,7 @@ metadata:
   name: api
 spec:
   ports:
-    port: 8000
+    - port: 8000
   selector:
     app: api
   type: LoadBalancer
