@@ -10,8 +10,8 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-  - script: make test
-  - script: touch foo
+  # - script: make test
+  # - script: touch foo
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'manifests'
