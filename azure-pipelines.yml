@@ -1,0 +1,32 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - script: echo Hello, world!
+    displayName: "Run a one-line script"
+
+  - task: CmdLine@2
+    inputs:
+      script: "make test"
+    displayName: "Run tests"
+
+  - task: HelmDeploy@0
+    inputs:
+      connectionType: "Azure Resource Manager"
+      azureResourceGroup: "tao-test"
+      kubernetesCluster: "tao-test"
+      namespace: "test"
+      command: "ls"
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: "Run a multi-line script"

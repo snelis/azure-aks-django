@@ -1,0 +1,17 @@
+# Define all requirements, only pin when necessary (and if so, add a comment explaining why).
+# See # https://git.datapunt.amsterdam.nl/Datapunt/python-best-practices/blob/master/dependency_management/
+
+# Django
+Django
+psycopg2-binary
+django_extensions
+werkzeug
+
+# API
+djangorestframework
+django-cors-headers
+drf-yasg
+django-filter
+
+# Error reporting
+sentry-sdk
