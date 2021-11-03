@@ -10,18 +10,10 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: "Run a multi-line script"
-  - script: make build
   - script: make test
-  - script: make push
-
-  - task: HelmDeploy@0
+  
+  - task: PublishBuildArtifacts@1
     inputs:
-      connectionType: "Azure Resource Manager"
-      azureResourceGroup: "tao-test"
-      kubernetesCluster: "tao-test"
-      namespace: "test"
-      command: "ls"
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'aks-django-artifact'
+      publishLocation: 'Container'
