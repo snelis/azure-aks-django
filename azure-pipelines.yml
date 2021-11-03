@@ -11,9 +11,9 @@ pool:
 
 steps:
   - script: make test
-  
+  - script: touch foo
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/manifests'
       ArtifactName: 'aks-django-artifact'
       publishLocation: 'Container'

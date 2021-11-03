@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - env:
+            - name: CORS_DEFAULT_ALLOWED_ORIGIN
+              value: "http://localhost:8000"
+            - name: SECRET_KEY
+              value: insecure
+          image: taoregistry.azurecr.io/azure-aks-django:latest
+          imagePullPolicy: IfNotPresent
+          name: api
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      restartPolicy: Always
