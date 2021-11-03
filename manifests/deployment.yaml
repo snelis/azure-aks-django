@@ -18,6 +18,8 @@ spec:
               value: "http://localhost:8000"
             - name: SECRET_KEY
               value: insecure
+            - name: DEBUG
+              value: 1
           image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
           imagePullPolicy: IfNotPresent
           name: api
