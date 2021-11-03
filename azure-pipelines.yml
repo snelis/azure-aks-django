@@ -9,24 +9,31 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - script: echo Hello, world!
-    displayName: "Run a one-line script"
+stages:
+  - stage: build
+    jobs:
+      - job: build
+        steps:
+          - script: |
+              echo Add other tasks to build, test, and deploy your project.
+              echo See https://aka.ms/yaml
+            displayName: "Run a multi-line script"
+          - script: make build
+      - job: test
+        steps:
+          - script: make test
+      - job: push
+        steps:
+          - script: make push
 
-  - task: CmdLine@2
-    inputs:
-      script: "make test"
-    displayName: "Run tests"
-
-  - task: HelmDeploy@0
-    inputs:
-      connectionType: "Azure Resource Manager"
-      azureResourceGroup: "tao-test"
-      kubernetesCluster: "tao-test"
-      namespace: "test"
-      command: "ls"
-
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: "Run a multi-line script"
+  - stage: deploy
+    jobs:
+      - job: deploy
+        steps:
+          - task: HelmDeploy@0
+            inputs:
+              connectionType: "Azure Resource Manager"
+              azureResourceGroup: "tao-test"
+              kubernetesCluster: "tao-test"
+              namespace: "test"
+              command: "ls"
