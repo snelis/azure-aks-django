@@ -45,7 +45,7 @@ services:
         - BUILD_DATE
         - BUILD_REVISION
         - BUILD_VERSION
-    image: taoregistry.acr.io/azure-aks-django/backend:${VERSION:-latest}
+    image: taoregistry.azurecr.io/azure-aks-django/backend:${VERSION:-latest}
     command: /app/deploy/docker-run.sh
 
   test:
