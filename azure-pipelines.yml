@@ -17,7 +17,6 @@ steps:
       echo 'Print All Parameters:'
       echo 'Build ID: ' $(tag)
       echo 'Build number' $(Build.BuildNumber)
-  - script: print $(Build.BuildId)
   - script: make test
 
   - task: Docker@2
