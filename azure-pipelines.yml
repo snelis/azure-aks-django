@@ -19,6 +19,9 @@ steps:
       echo 'Build number' $(Build.BuildNumber)
   - script: make test
 
+  - script: make build VERSION=$(Build.BuildId)
+  - script: make push VERSION=$(Build.BuildId)
+
   - task: Docker@2
     displayName: Push image
     inputs:
@@ -29,7 +32,6 @@ steps:
         latest
         $(Build.BuildID)
 
-  - script: make push VERSION=$(Build.BuildId)
 
   # - script: touch foo
   - task: PublishBuildArtifacts@1
