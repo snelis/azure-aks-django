@@ -1,5 +1,6 @@
-from api.info.views import InfoViewSet
 from rest_framework import routers
+
+from api.info.views import InfoViewSet
 
 app_name = 'api'
 router = routers.DefaultRouter()
