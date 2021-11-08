@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
-  labels:
-    aadpodidbinding: api-identity
 spec:
   replicas: 1
   selector:
@@ -13,6 +11,7 @@ spec:
     metadata:
       labels:
         app: api
+        aadpodidbinding: api-identity
     spec:
       containers:
         - env:
