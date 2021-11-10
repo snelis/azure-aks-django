@@ -11,3 +11,16 @@ spec:
           image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
           command: ["/bin/sh", "-c"]
           args: ["/app/deploy/pre-deploy.sh"]
+          env:
+            - name: CORS_DEFAULT_ALLOWED_ORIGIN
+              value: "http://localhost:8000"
+            - name: SECRET_KEY
+              value: insecure
+            - name: DEBUG
+              value: "false"
+            - name: DATABASE_HOST
+              value: "tao-test-db.postgres.database.azure.com"
+            - name: DATABASE_NAME
+              value: "api"
+            - name: DATABASE_USER
+              value: "api@tao-test-db"
