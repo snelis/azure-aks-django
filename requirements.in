@@ -13,5 +13,8 @@ django-cors-headers
 drf-yasg
 django-filter
 
+# Cloud hosting
+azure-identity
+
 # Error reporting
 sentry-sdk
