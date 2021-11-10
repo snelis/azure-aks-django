@@ -5,6 +5,7 @@ metadata:
 spec:
   template:
     spec:
+      restartPolicy: OnFailure
       containers:
         - name: main
           image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
