@@ -4,6 +4,10 @@ metadata:
   name: pre-deploy
 spec:
   template:
+    metadata:
+      labels:
+        app: api
+        aadpodidbinding: api-identity
     spec:
       restartPolicy: OnFailure
       containers:
