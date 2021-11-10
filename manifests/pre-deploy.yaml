@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pre-deploy
+spec:
+  template:
+    spec:
+      containers:
+        - name: app
+          image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
+          command: ["/bin/sh", "-c"]
+          args: ["/app/deploy/pre-deploy.sh"]

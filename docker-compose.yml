@@ -48,7 +48,7 @@ services:
         - BUILD_REVISION
         - BUILD_VERSION
     image: taoregistry.azurecr.io/azure-aks-django:${VERSION:-latest}
-    command: /app/deploy/docker-run.sh
+    command: /app/deploy/run.sh
 
   test:
     <<: *base-app

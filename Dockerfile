@@ -24,7 +24,7 @@ ENV BUILD_DATE=$BUILD_DATE
 ENV BUILD_REVISION=$BUILD_REVISION
 ENV BUILD_VERSION=$BUILD_VERSION
 
-CMD ["/app/deploy/docker-run.sh"]
+CMD ["/app/deploy/run.sh"]
 
 # stage 2, dev
 FROM app as dev
