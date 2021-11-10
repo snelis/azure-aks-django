@@ -191,7 +191,8 @@ class DBPassword:
 
     def get_token(self):
         try:
-            return self.managed_identity.get_token(*self.SCOPES)
+            token = self.managed_identity.get_token(*self.SCOPES)
+            return token.token
         except CredentialUnavailableError as e:
             logger.error(e)
             return None
