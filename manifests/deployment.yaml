@@ -29,7 +29,7 @@ spec:
               value: "api@tao-test-db"
           image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
           imagePullPolicy: IfNotPresent
-          name: api
+          name: main
           resources:
             limits:
               cpu: 500m
