@@ -17,6 +17,7 @@ x-app: &base-app
     DEBUG: 0
     PYTHONBREAKPOINT:
     CORS_DEFAULT_ALLOWED_ORIGIN: "http://localhost:8080"
+    UVICORN_CMD_ARGS: '--reload'
   entrypoint: /app/deploy/wait-for-it.sh database:5432 --
 
 services:

@@ -10,10 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import logging
 import os
 import socket
 from distutils.util import strtobool as distutils_strtobool
 from pathlib import Path
+
+from azure.identity import CredentialUnavailableError, ManagedIdentityCredential
+
+# get an instance of a logger
+logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +48,31 @@ def get_list_from_env(var_name):
         return env_settings
     return []
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {name} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -98,6 +129,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,9 +160,45 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'main.wsgi.application'
 
+SESSION_COOKIE_AGE = 60 * 60
+SESSION_COOKIE_SECURE = strtobool(os.getenv('SESSION_COOKIE_SECURE', 'false'))
+SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN')
+SESSION_COOKIE_SAMESITE = os.getenv('SESSION_COOKIE_SAMESITE', 'Lax') or None
+SESSION_HEADER_EXPIRE_NAME = 'X_Session_Expires'
+SESSION_SAVE_EVERY_REQUEST = True
+
+SECURE_HSTS_SECONDS = os.getenv('SECURE_HSTS_SECONDS', 0)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = strtobool(
+    os.getenv('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'false')
+)
+SECURE_HSTS_PRELOAD = strtobool(os.getenv('SECURE_HSTS_PRELOAD', 'false'))
+
+SECURE_REFERRER_POLICY = os.getenv('SECURE_REFERRER_POLICY')
+SECURE_SSL_REDIRECT = strtobool(os.getenv('SECURE_SSL_REDIRECT', 'false'))
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+
+class DBPassword:
+
+    SCOPES = ['https://ossrdbms-aad.database.windows.net/']
+
+    def __init__(self):
+        self.managed_identity = ManagedIdentityCredential()
+        self.token = self.get_token()
+
+    def get_token(self):
+        try:
+            return self.managed_identity.get_token(*self.SCOPES)
+        except CredentialUnavailableError as e:
+            logger.error(e)
+            return None
+
+    def __str__(self):
+        return self.token or 'dev'
+
 
 DATABASES = {
     'default': {
@@ -139,10 +207,10 @@ DATABASES = {
         ),
         'NAME': os.getenv('DATABASE_NAME', 'dev'),
         'USER': os.getenv('DATABASE_USER', 'dev'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'dev'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', DBPassword()),
         'HOST': os.getenv('DATABASE_HOST', 'database'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
-        'CONN_MAX_AGE': int(os.getenv('DATABASE_CONN_MAX_AGE', 20)),
+        'CONN_MAX_AGE': int(os.getenv('DATABASE_CONN_MAX_AGE', 5)),
     }
 }
 

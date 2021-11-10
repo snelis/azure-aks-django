@@ -6,6 +6,9 @@ Django
 psycopg2-binary
 django_extensions
 werkzeug
+uvicorn 
+gunicorn
+whitenoise
 
 # API
 djangorestframework

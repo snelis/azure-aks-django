@@ -21,6 +21,12 @@ spec:
               value: insecure
             - name: DEBUG
               value: "false"
+            - name: DATABASE_HOST
+              value: "tao-test-db.postgres.database.azure.com"
+            - name: DATABASE_NAME
+              value: "api"
+            - name: DATABASE_USER
+              value: "api"
           image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
           imagePullPolicy: IfNotPresent
           name: api
