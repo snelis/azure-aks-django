@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+piVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
@@ -24,7 +24,7 @@ spec:
             - name: DATABASE_HOST
               value: "tao-test-db.postgres.database.azure.com"
             - name: DATABASE_NAME
-              value: "api"
+              value: "data"
             - name: DATABASE_USER
               value: "api@tao-test-db"
           image: taoregistry.azurecr.io/azure-aks-django:#{Build.BuildId}#
