@@ -185,20 +185,16 @@ class DBPassword:
 
     SCOPES = ['https://ossrdbms-aad.database.windows.net/']
 
-    def __init__(self):
-        self.managed_identity = ManagedIdentityCredential()
-        self.token = self.get_token()
-
-    def get_token(self):
+    def __str__(self):
+        managed_identity = ManagedIdentityCredential()
         try:
-            token = self.managed_identity.get_token(*self.SCOPES)
+            token = managed_identity.get_token(*self.SCOPES)
             return token.token
         except CredentialUnavailableError as e:
             logger.error(e)
             return None
-
-    def __str__(self):
-        return self.token or 'dev'
+        
+        return 'dev'
 
 
 DATABASES = {
