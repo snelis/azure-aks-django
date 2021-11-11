@@ -185,7 +185,7 @@ class DBPassword:
 
     SCOPES = ['https://ossrdbms-aad.database.windows.net']
 
-    def __str__(self):
+    def get_azure_token(self):
         managed_identity = ManagedIdentityCredential()
         try:
             token = managed_identity.get_token(*self.SCOPES)
@@ -194,7 +194,12 @@ class DBPassword:
             logger.error(e)
             return None
 
-        return 'dev'
+    def get_password(self):
+        password = self.get_azure_token()
+        return password or 'dev'
+
+    def __str__(self):
+        return self.get_password()
 
 
 DATABASES = {
