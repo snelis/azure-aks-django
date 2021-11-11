@@ -27,4 +27,4 @@ spec:
             - name: DATABASE_NAME
               value: "data"
             - name: DATABASE_USER
-              value: "api@tao-test-db"
+              value: "writer@tao-test-db"
