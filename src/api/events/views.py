@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from api.events.serializers import EventSerializer
 
+from api.events.serializers import EventSerializer
 from events.models import Event
 
 

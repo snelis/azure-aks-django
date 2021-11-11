@@ -206,9 +206,7 @@ class DBPassword:
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv(
-            'DATABASE_ENGINE', 'contrib.timescale.db.backend'
-        ),
+        'ENGINE': os.getenv('DATABASE_ENGINE', 'contrib.timescale.db.backend'),
         'NAME': os.getenv('DATABASE_NAME', 'dev'),
         'USER': os.getenv('DATABASE_USER', 'dev'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', DBPassword()),
