@@ -25,6 +25,6 @@ spec:
             - name: DATABASE_HOST
               value: "tao-test-db.postgres.database.azure.com"
             - name: DATABASE_NAME
-              value: "api"
+              value: "data"
             - name: DATABASE_USER
               value: "api@tao-test-db"
