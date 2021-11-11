@@ -193,7 +193,7 @@ class DBPassword:
         except CredentialUnavailableError as e:
             logger.error(e)
             return None
-        
+
         return 'dev'
 
 
