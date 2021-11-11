@@ -8,4 +8,4 @@ class EventSerializer(GeoModelSerializer):
     class Meta:
         model = Event
         geo_field = 'location'
-        fields = ['pk', 'data', 'location']
+        fields = ['pk', 'data', 'location', 'created_at']
