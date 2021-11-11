@@ -120,11 +120,14 @@ INSTALLED_APPS = [
     # external apps
     'django_extensions',
     'rest_framework',
+    'rest_framework_gis',
     'drf_yasg',
     'corsheaders',
     'django_filters',
     # Internal Apps
+    'contrib.timescale',
     'api',
+    'events',
 ]
 
 MIDDLEWARE = [
@@ -190,8 +193,7 @@ class DBPassword:
         try:
             token = managed_identity.get_token(*self.SCOPES)
             return token.token
-        except CredentialUnavailableError as e:
-            logger.error(e)
+        except CredentialUnavailableError:
             return None
 
     def get_password(self):
@@ -205,7 +207,7 @@ class DBPassword:
 DATABASES = {
     'default': {
         'ENGINE': os.getenv(
-            'DATABASE_ENGINE', 'django.contrib.gis.db.backends.postgis'
+            'DATABASE_ENGINE', 'contrib.timescale.db.backend'
         ),
         'NAME': os.getenv('DATABASE_NAME', 'dev'),
         'USER': os.getenv('DATABASE_USER', 'dev'),
@@ -213,7 +215,7 @@ DATABASES = {
         'HOST': os.getenv('DATABASE_HOST', 'database'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
         'CONN_MAX_AGE': int(os.getenv('DATABASE_CONN_MAX_AGE', 60 * 60 * 24)),
-        'OPTIONS': {'sslmode': 'require'},
+        'OPTIONS': {'sslmode': 'allow'},
     }
 }
 

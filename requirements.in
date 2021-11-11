@@ -12,6 +12,7 @@ whitenoise
 
 # API
 djangorestframework
+djangorestframework-gis
 django-cors-headers
 drf-yasg
 django-filter
