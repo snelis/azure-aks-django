@@ -183,7 +183,7 @@ SECURE_SSL_REDIRECT = strtobool(os.getenv('SECURE_SSL_REDIRECT', 'false'))
 
 class DBPassword:
 
-    SCOPES = ['https://ossrdbms-aad.database.windows.net/']
+    SCOPES = ['https://ossrdbms-aad.database.windows.net']
 
     def __str__(self):
         managed_identity = ManagedIdentityCredential()
