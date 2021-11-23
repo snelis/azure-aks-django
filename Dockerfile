@@ -5,7 +5,7 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && apt-get install --no-install-recommends -y \
            libgdal20 \
-    && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old \
+    && rm -rf /var/lib/apt/lists/* /var/cache/debconf/*-old
 
 RUN wget -q https://raw.githubusercontent.com/dapr/cli/v1.5.0/install/install.sh -O - | /bin/bash
 

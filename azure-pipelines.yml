@@ -9,25 +9,42 @@ pool:
 
 variables:
   imageName: azure-aks-django
-  containerRegistry: taoregistry
-  tag: $(Build.BuildId)
+  azureContainerRegistry: taoregistry.azurecr.io
+  azureSubscriptionEndpoint: "ARM-CCC-Sandbox-SIA"
+  imageTag: $(Build.BuildId)
 
 steps:
   - script: |
       echo 'Print All Parameters:'
-      echo 'Build ID: ' $(tag)
+      echo 'Build ID: ' $(imageTag)
       echo 'Build number' $(Build.BuildNumber)
   - script: make test
-  - script: make build VERSION=$(Build.BuildId)
+  - script: make build VERSION=$(imageTag)
 
   - task: Docker@1
-    displayName: push
+    displayName: "Build an image"
     inputs:
-      azureSubscriptionEndpoint: 'ARM-CCC-Sandbox-SIA'
-      azureContainerRegistry: taoregistry
-      command: push
-      imageName: '$(imageName):$(Build.BuildId)'
+      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      azureContainerRegistry: $(azureContainerRegistry)
+      imageName: "$(imageName):$(imageTag)"
       includeSourceTags: true
+
+  - task: Docker@1
+    displayName: 'Push an image'
+    inputs:
+      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      azureContainerRegistry: $(azureContainerRegistry)
+      command: 'Push an image'
+      imageName: "$(imageName):$(imageTag)"
+
+  - task: Docker@1
+    displayName: "Docker: login ACR"
+    inputs:
+      command: login
+      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      azureContainerRegistry: $(azureContainerRegistry)
+
+  - script: make push VERSION=$(imageTag)
 
   - task: PublishBuildArtifacts@1
     inputs:
