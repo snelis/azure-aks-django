@@ -18,34 +18,34 @@ steps:
       echo 'Print All Parameters:'
       echo 'Build ID: ' $(imageTag)
       echo 'Build number' $(Build.BuildNumber)
-  - script: make test
-  - script: make build VERSION=$(imageTag)
-
-  # - task: Docker@1
-    # displayName: "Build an image"
-    # inputs:
-      # azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      # azureContainerRegistry: $(azureContainerRegistry)
-      # imageName: "$(imageName):$(imageTag)"
-      # includeSourceTags: true
-
-  # - task: Docker@1
-    # displayName: 'Push an image'
-    # inputs:
-      # azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      # azureContainerRegistry: $(azureContainerRegistry)
-      # command: 'Push an image'
-      # imageName: "$(imageName):$(imageTag)"
+  # - script: make test
+  # - script: make build VERSION=$(imageTag)
 
   - task: Docker@1
-    displayName: "Docker: login ACR"
+    displayName: "Build an image"
     inputs:
-      command: login
       azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
       azureContainerRegistry: $(azureContainerRegistry)
+      imageName: "$(imageName):$(imageTag)"
+      includeSourceTags: true
 
-  - script: make push VERSION=$(imageTag)
-  - script: docker logout $(azureContainerRegistry)
+  - task: Docker@1
+    displayName: 'Push an image'
+    inputs:
+      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      azureContainerRegistry: $(azureContainerRegistry)
+      command: 'Push an image'
+      imageName: "$(imageName):$(imageTag)"
+
+  # - task: Docker@1
+    # displayName: "Docker: login ACR"
+    # inputs:
+      # command: login
+      # azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      # azureContainerRegistry: $(azureContainerRegistry)
+
+  # - script: make push VERSION=$(imageTag)
+  # - script: docker logout $(azureContainerRegistry)
 
   - task: PublishBuildArtifacts@1
     inputs:
