@@ -24,7 +24,7 @@ steps:
     displayName: 'Push an image'
     inputs:
       azureSubscription: 'ARM-CCC-Sandbox-SIA'
-      azureContainerRegistry: $(taoregistry)
+      azureContainerRegistry: $(containerRegistry)
       action: 'Push an image'
       imageName: '$(imageName):$(Build.BuildId)'
       includeSourceTags: true
