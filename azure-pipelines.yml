@@ -21,21 +21,21 @@ steps:
   - script: make test
   - script: make build VERSION=$(imageTag)
 
-  - task: Docker@1
-    displayName: "Build an image"
-    inputs:
-      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      azureContainerRegistry: $(azureContainerRegistry)
-      imageName: "$(imageName):$(imageTag)"
-      includeSourceTags: true
+  # - task: Docker@1
+    # displayName: "Build an image"
+    # inputs:
+      # azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      # azureContainerRegistry: $(azureContainerRegistry)
+      # imageName: "$(imageName):$(imageTag)"
+      # includeSourceTags: true
 
-  - task: Docker@1
-    displayName: 'Push an image'
-    inputs:
-      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      azureContainerRegistry: $(azureContainerRegistry)
-      command: 'Push an image'
-      imageName: "$(imageName):$(imageTag)"
+  # - task: Docker@1
+    # displayName: 'Push an image'
+    # inputs:
+      # azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+      # azureContainerRegistry: $(azureContainerRegistry)
+      # command: 'Push an image'
+      # imageName: "$(imageName):$(imageTag)"
 
   - task: Docker@1
     displayName: "Docker: login ACR"
