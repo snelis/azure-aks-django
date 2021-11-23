@@ -21,9 +21,6 @@ services:
         - BUILD_DATE
         - BUILD_REVISION
         - BUILD_VERSION
-    depends_on:
-      database:
-        condition: service_healthy
     volumes:
       - ./src:/app/src
       - ./deploy:/app/deploy
@@ -35,9 +32,6 @@ services:
       PYTHONBREAKPOINT:
       CORS_DEFAULT_ALLOWED_ORIGIN: "http://localhost:8080"
       UVICORN_CMD_ARGS: "--reload"
-    depends_on:
-      - placement
-      - redis
     command: /app/deploy/run.sh
 
   dapr:
@@ -85,6 +79,9 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: "main.settings"
       PYTEST_ADDOPTS:
+    depends_on:
+      database:
+        condition: service_healthy
 
   redis:
     image: "redis:alpine"
