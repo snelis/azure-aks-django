@@ -10,7 +10,7 @@ pool:
 variables:
   imageName: azure-aks-django
   azureContainerRegistry: taoregistry.azurecr.io
-  azureSubscriptionEndpoint: "pipeline-managed-identity"
+  azureSubscriptionEndpoint: ARM-CCC-Sandbox-SIA
   imageTag: $(Build.BuildId)
 
 steps:
