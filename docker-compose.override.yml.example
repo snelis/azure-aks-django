@@ -8,15 +8,11 @@
 # Usage: copy this file, name it ".docker-compose.override.yml" and
 # set your own values.
 
-version: "3.4"
+version: "3"
 services:
-  database:
-    ports:
-      - "5432:5432"
   app:
     ports:
       - "8000:8000"
-
   dev:
     ports:
       - "8000:8000"

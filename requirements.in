@@ -17,6 +17,10 @@ django-cors-headers
 drf-yasg
 django-filter
 
+# Networking
+requests
+dapr
+
 # Cloud hosting
 azure-identity
 

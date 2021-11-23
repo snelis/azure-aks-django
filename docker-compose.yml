@@ -1,24 +1,4 @@
-version: "3.7"
-
-x-app: &base-app
-  build:
-    context: .
-    target: app
-  depends_on:
-    - database
-  volumes:
-    - ./src:/app/src
-    - ./tests:/app/tests
-    - ./deploy:/app/deploy
-    - ./pyproject.toml:/app/pyproject.toml
-    - ./fixtures:/app/fixtures
-  environment: &base-app-env
-    SECRET_KEY: "insecure"
-    DEBUG: 0
-    PYTHONBREAKPOINT:
-    CORS_DEFAULT_ALLOWED_ORIGIN: "http://localhost:8080"
-    UVICORN_CMD_ARGS: '--reload'
-  entrypoint: /app/deploy/wait-for-it.sh database:5432 --
+version: "3"
 
 services:
   database:
@@ -27,19 +7,13 @@ services:
       POSTGRES_DB: dev
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
-
-  dev:
-    <<: *base-app
-    build:
-      context: .
-      target: dev
-    environment:
-      <<: *base-app-env
-      DEBUG: "true"
-    command: python manage.py runserver_plus --print-sql 0.0.0.0:8000
+    healthcheck:
+      test: pg_isready -U dev -d dev -t 10
+      interval: 1s
+      timeout: 1s
+      retries: 3
 
   app:
-    <<: *base-app
     build:
       context: .
       target: app
@@ -47,15 +21,70 @@ services:
         - BUILD_DATE
         - BUILD_REVISION
         - BUILD_VERSION
-    image: taoregistry.azurecr.io/azure-aks-django:${VERSION:-latest}
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+      - ./deploy:/app/deploy
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./fixtures:/app/fixtures
+    environment:
+      SECRET_KEY: "insecure"
+      DEBUG: 0
+      PYTHONBREAKPOINT:
+      CORS_DEFAULT_ALLOWED_ORIGIN: "http://localhost:8080"
+      UVICORN_CMD_ARGS: "--reload"
+    depends_on:
+      - placement
+      - redis
     command: /app/deploy/run.sh
 
-  test:
-    <<: *base-app
+  dapr:
+    image: "daprio/daprd:edge"
+    command:
+      - "./daprd"
+      - "-app-id"
+      - "main"
+      - "-app-port"
+      - "9000"
+      - "-placement-host-address"
+      - "placement:50005"
+      - "-components-path"
+      - "/components"
+    volumes:
+      - ./dapr/components/:/components
+      - ./dapr/secrets.json:/secrets.json
+    depends_on:
+      - dev
+    network_mode: "service:dev"
+
+  placement:
+    image: "daprio/dapr"
+    command:
+      - "./placement"
+    ports:
+      - "50005"
+
+  dev:
+    extends:
+      service: app
     build:
-      context: .
-      target: tests
+      target: dev
     environment:
-      <<: *base-app-env
+      DEBUG: "true"
+    command: python manage.py runserver_plus --print-sql 0.0.0.0:8000
+
+  test:
+    extends:
+      service: dev
+    build:
+      target: tests
+    volumes:
+      - ./tests:/app/tests
+    environment:
       DJANGO_SETTINGS_MODULE: "main.settings"
       PYTEST_ADDOPTS:
+
+  redis:
+    image: "redis:alpine"
