@@ -9,8 +9,7 @@ pool:
 
 variables:
   imageName: azure-aks-django
-  azureContainerRegistry: taoregistry.azurecr.io
-  azureSubscriptionEndpoint: ARM-CCC-Sandbox-SIA
+  azureContainerRegistry: devsoacr
   imageTag: $(Build.BuildId)
 
 steps:
@@ -21,28 +20,14 @@ steps:
   # - script: make test
   # - script: make build VERSION=$(imageTag)
 
-  - task: Docker@1
-    displayName: "Build an image"
+  - task: Docker@2
+    displayName: "Build and push"
     inputs:
-      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      azureContainerRegistry: $(azureContainerRegistry)
-      imageName: "$(imageName):$(imageTag)"
-      includeSourceTags: true
-
-  - task: Docker@1
-    displayName: 'Push an image'
-    inputs:
-      azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      azureContainerRegistry: $(azureContainerRegistry)
-      command: 'Push an image'
-      imageName: "$(imageName):$(imageTag)"
-
-  # - task: Docker@1
-    # displayName: "Docker: login ACR"
-    # inputs:
-      # command: login
-      # azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-      # azureContainerRegistry: $(azureContainerRegistry)
+      containerRegistry: "devsoacr"
+      repository: "tao-aks-django"
+      command: "buildAndPush"
+      tags: |
+        $(imageTag)
 
   # - script: make push VERSION=$(imageTag)
   # - script: docker logout $(azureContainerRegistry)
