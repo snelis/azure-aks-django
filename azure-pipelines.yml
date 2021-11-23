@@ -20,12 +20,12 @@ steps:
   - script: make test
   - script: make build VERSION=$(Build.BuildId)
 
-  - task: Docker@0
-    displayName: 'Push an image'
+  - task: Docker@1
+    displayName: push
     inputs:
-      azureSubscription: 'ARM-CCC-Sandbox-SIA'
-      azureContainerRegistry: $(containerRegistry)
-      action: 'Push an image'
+      azureSubscriptionEndpoint: 'ARM-CCC-Sandbox-SIA'
+      azureContainerRegistry: taoregistry
+      command: push
       imageName: '$(imageName):$(Build.BuildId)'
       includeSourceTags: true
 
