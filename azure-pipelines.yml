@@ -10,7 +10,7 @@ pool:
 variables:
   imageName: azure-aks-django
   azureContainerRegistry: taoregistry.azurecr.io
-  azureSubscriptionEndpoint: "ARM-CCC-Sandbox-SIA"
+  azureSubscriptionEndpoint: "pipeline-managed-identity"
   imageTag: $(Build.BuildId)
 
 steps:
@@ -45,6 +45,7 @@ steps:
       azureContainerRegistry: $(azureContainerRegistry)
 
   - script: make push VERSION=$(imageTag)
+  - script: docker logout $(azureContainerRegistry)
 
   - task: PublishBuildArtifacts@1
     inputs:
